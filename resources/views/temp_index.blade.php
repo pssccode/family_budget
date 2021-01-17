@@ -71,6 +71,7 @@
                                 <td>{{ $expence->sum * -1 }}</td>
                                 <td>{{ $expence->mandatory ? 'Да' : 'Нет' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($expence->date)->format('d.m.Y') }}</td>
+
                             </tr>
                         @endforeach
                         </tbody>
