@@ -18,10 +18,16 @@ class History extends Model
         'comment',
         'date',
         'mandatory',
+        'category_id'
     ];
 
     public static function balance()
     {
         return self::sum('sum');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

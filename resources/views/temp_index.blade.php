@@ -27,15 +27,19 @@
                         <thead>
                         <tr>
                             <th>Заголовок</th>
+                            <th>Категория</th>
                             <th>Сумма</th>
                             <th>Дата</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($incomes as $item)
-                            <td>{{ $item->title }}</td>
-                            <td>{{ $item->sum }}</td>
-                            <td>{{ \Carbon\Carbon::parse($item->date)->format('d.m.Y') }}</td>
+                            <tr>
+                                <td>{{ $item->title }}</td>
+                                <td>{{ $item->category->name }}</td>
+                                <td>{{ $item->sum }}</td>
+                                <td>{{ \Carbon\Carbon::parse($item->date)->format('d.m.Y') }}</td>
+                            </tr>
                         @endforeach
                         </tbody>
                     </table>
@@ -53,6 +57,7 @@
                         <thead>
                         <tr>
                             <th>Заголовок</th>
+                            <th>Категория</th>
                             <th>Сумма</th>
                             <th>Обязательный платеж</th>
                             <th>Дата</th>
@@ -62,7 +67,8 @@
                         @foreach($expenses as $expence)
                             <tr>
                                 <td>{{ $expence->title }}</td>
-                                <td>{{ $expence->sum }}</td>
+                                <td>{{ $expence->category->name }}</td>
+                                <td>{{ $expence->sum * -1 }}</td>
                                 <td>{{ $expence->mandatory ? 'Да' : 'Нет' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($expence->date)->format('d.m.Y') }}</td>
                             </tr>
@@ -75,61 +81,73 @@
         <div class="col-md-4">
             <div class="row">
                 <div class="col-md-12">
-{{--                    <div class="summary__wrap" style="border: 1px solid #ccc; padding: 20px;">--}}
-                        <div class="row text-center">
-                            <div class="col-md-12">
-                                <h2>{{ $balance }} грн.</h2>
-                                <h3>Баланс</h3>
+                    {{--                    <div class="summary__wrap" style="border: 1px solid #ccc; padding: 20px;">--}}
+                    <div class="row text-center">
+                        <div class="col-md-12">
+                            <h2>{{ $balance }} грн.</h2>
+                            <h3>Баланс</h3>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <h3>{{ $allIncomes }} грн.</h3>
+                            <h4>Всего доходов: </h4>
+                        </div>
+                        <div class="col-md-4">
+                            <h3>{{ $allMandatory }} грн.</h3>
+                            <h4>Всего обязательных расходов: </h4>
+                        </div>
+                        <div class="col-md-4">
+                            <h3>{{ $allExpenses }} грн.</h3>
+                            <h4>Всего расходов: </h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="well">
+                                <form action="{{ route('store') }}" method="post">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label for="">Заголовок</label>
+                                        <input type="text" class="form-control" name="title">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Категория</label>
+                                        <select name="category_id" id="" class="form-control">
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Сумма</label>
+                                        <input type="text" class="form-control" id="sum" name="sum">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Дата</label>
+                                        <input type="text" class="form-control" id="dt" name="date">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Тип</label>
+                                        <select name="type" id="type" class="form-control">
+                                            <option value="0">Расходы</option>
+                                            <option value="1">Доходы</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mandatory">
+                                            <input type="checkbox" name="mandatory" id="mandatory">
+                                            Обязательный расход
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <div class="row text-center">
-                            <div class="col-md-6">
-                                <h3>{{ $allIncomes }} грн.</h3>
-                                <h3>Всего доходов: </h3>
-                            </div>
-                            <div class="col-md-6">
-                                <h3>{{ $allExpenses }} грн.</h3>
-                                <h3>Всего расходов: </h3>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="well">
-                                    <form action="{{ route('store') }}" method="post">
-                                        @csrf
-                                        <div class="form-group">
-                                            <label for="">Заголовок</label>
-                                            <input type="text" class="form-control" name="title">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Сумма</label>
-                                            <input type="text" class="form-control" name="sum">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Дата</label>
-                                            <input type="text" class="form-control" id="dt" name="date">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Тип</label>
-                                            <select name="type" id="" class="form-control">
-                                                <option value="0">Расходы</option>
-                                                <option value="1">Доходы</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">
-                                                <input type="checkbox" name="mandatory">
-                                                Обязательный расход
-                                            </label>
-                                        </div>
-                                        <div class="form-group">
-                                            <button type="submit" class="btn btn-primary">Сохранить</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-{{--                    </div>--}}
+                    </div>
+                    {{--                    </div>--}}
                 </div>
             </div>
         </div>
