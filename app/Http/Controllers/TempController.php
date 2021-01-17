@@ -14,7 +14,6 @@ class TempController extends Controller
         $incomes = History::where('type', 1)->with('category')->orderByDesc('date')->get();
         $expenses = History::where('type', 0)->with('category')->orderByDesc('date')->orderByDesc('mandatory')->get();
 
-
         return view('temp_index', [
             'incomes' => $incomes,
             'expenses' => $expenses,

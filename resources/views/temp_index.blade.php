@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
 </head>
 <body>
 
@@ -23,7 +24,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h3>Доходы:</h3>
-                    <table class="table table-striped table-bordered">
+                    <table class="table table-striped table-bordered" id="incomesTable">
                         <thead>
                         <tr>
                             <th>Заголовок</th>
@@ -53,7 +54,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h3>Расходы:</h3>
-                    <table class="table table-striped table-bordered">
+                    <table class="table table-striped table-bordered" id="expenceTable">
                         <thead>
                         <tr>
                             <th>Заголовок</th>
@@ -71,7 +72,6 @@
                                 <td>{{ $expence->sum * -1 }}</td>
                                 <td>{{ $expence->mandatory ? 'Да' : 'Нет' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($expence->date)->format('d.m.Y') }}</td>
-
                             </tr>
                         @endforeach
                         </tbody>
@@ -165,10 +165,14 @@
         crossorigin="anonymous"></script>
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('locales/bootstrap-datepicker.ru.min.js') }}"></script>
+<script src="//cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 <script>
     $("#dt").datepicker({
         language: 'ru'
     });
+
+    $("#incomesTable").DataTable();
+    $("#expenceTable").DataTable();
 </script>
 </body>
 </html>

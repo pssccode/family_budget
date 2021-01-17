@@ -17,6 +17,10 @@ Route::get(
     '/',
     [\App\Http\Controllers\TempController::class, 'index']
 )->name('index');
+Route::get(
+    '/expences_table',
+    [\App\Http\Controllers\TempController::class, 'expencesTable']
+)->name('expences.table');
 Route::post(
     '/',
     [\App\Http\Controllers\TempController::class, 'store']
